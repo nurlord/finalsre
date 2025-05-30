@@ -16,8 +16,8 @@ jobs:
           ssh-private-key: ${{ secrets.MY_SSH_KEY }}
       - name: Checkout repo (optional, if needed for ansible playbook or files)
         uses: actions/checkout@v4
-      - name: Run ansible playbook on remote server
+      - name: Run Ansible playbook
         run: |
-          ansible-playbook -i "$SERVER_IP," -u root --ssh-extra-args="-o StrictHostKeyChecking=no" project/ansible/deploy-nest.yaml
+          ansible-playbook -i inventory.ini playbook.yml
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
+          ANSIBLE_HOST_KEY_CHECKING: "False"

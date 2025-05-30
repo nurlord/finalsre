@@ -33,7 +33,7 @@
 
     - name: Install Ansible
       apt:
-        name: ansible
+        name: ansible-core
         state: present
         update_cache: yes
 
