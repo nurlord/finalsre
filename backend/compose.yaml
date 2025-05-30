@@ -11,6 +11,8 @@ services:
       - redis
     networks:
       - backend
+    command: sh -c "npx prisma migrate deploy && node dist/main.js"
+
   db:
     container_name: postgres
     image: postgres:17.2
