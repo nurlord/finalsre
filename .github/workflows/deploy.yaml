@@ -19,6 +19,6 @@ jobs:
       - name: Run Ansible playbook
         run: |
           echo $(pwd)
-          ansible-playbook -i project/ansible/inventory.ini project/ansible/deploy-nest.yaml
+          ansible-playbook -i ansible/inventory.ini ansible/deploy-nest.yaml
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
