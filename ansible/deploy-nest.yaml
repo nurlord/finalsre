@@ -42,10 +42,11 @@
         dest: /usr/local/bin/docker-compose
         mode: "0755"
 
-    - name: Clone project from GitHub
+    - name: Clone or update project from GitHub
       ansible.builtin.git:
         repo: "https://github.com/nurlord/finalsre.git"
         dest: "{{ root_dir }}"
+        update: yes
 
     - name: Ensure app directory exists
       file:
@@ -89,10 +90,18 @@
         name: build-essential
         state: present
 
+    - name: Rebuild Docker images (no cache)
+      command: docker compose build --no-cache
+      args:
+        chdir: "{{ app_dir }}"
+
     - name: Run Docker Compose up Nest app
       community.docker.docker_compose_v2:
         project_src: "{{ app_dir }}"
+        state: present
+        recreate: always
 
     - name: Run Docker Compose up Metric tools
       community.docker.docker_compose_v2:
         project_src: "{{ root_dir }}"
+        recreate: always
