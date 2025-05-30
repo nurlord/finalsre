@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Run Ansible playbook
         run: |
-          ansible-playbook -i inventory.ini playbook.yml
+          echo $(pwd)
+          ansible-playbook -i project/ansible/inventory.ini project/ansible/deploy-nest.yaml
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
