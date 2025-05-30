@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repo (optional, if needed for ansible playbook or files)
         uses: actions/checkout@v4
       - name: Run ansible playbook on remote server
+      - name: Run ansible playbook on remote server
         run: |
+          ls -la project/ansible   # debug
           ansible-playbook -i project/ansible/inventory.ini project/ansible/deploy-nest.yaml
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
