@@ -2,7 +2,8 @@
 - hosts: webserver
   become: yes
   vars:
-    app_dir: /root/nestjs-app
+    app_dir: /root/project/backend
+    root_dir: /root/project/
   tasks:
     - name: Install required apt packages
       apt:
@@ -43,7 +44,7 @@
 
     - name: Ensure app directory exists
       file:
-        path: "{{ app_dir }}"
+        path: "{{ root_dir }}"
         state: directory
         owner: root
         group: root
@@ -52,7 +53,7 @@
     - name: Clone project from GitHub
       git:
         repo: git@github.com:nurlord/finalsre.git
-        dest: "{{ app_dir }}"
+        dest: "{{ root_dir }}"
         version: main
         accept_hostkey: yes
 
@@ -90,6 +91,10 @@
         name: build-essential
         state: present
 
-    - name: Run Docker Compose up using Compose V2
+    - name: Run Docker Compose up Nest app
       community.docker.docker_compose_v2:
         project_src: "{{ app_dir }}"
+
+    - name: Run Docker Compose up Metric tools
+      community.docker.docker_compose_v2:
+        project_src: "{{ root_dir }}"
