@@ -1,5 +1,6 @@
 services:
   nestjs:
+    restart: always
     build: .
     container_name: nestjs-app
     env_file:
