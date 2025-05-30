@@ -116,4 +116,3 @@
     - name: Run Docker Compose up Metric tools
       community.docker.docker_compose_v2:
         project_src: "{{ root_dir }}"
-        recreate: always
