@@ -31,6 +31,18 @@
         state: present
         update_cache: yes
 
+    - name: Install Ansible
+      apt:
+        name: ansible
+        state: present
+        update_cache: yes
+
+    - name: Install sshPass
+      apt:
+        name: sshpass
+        state: present
+        update_cache: yes
+
     - name: Install Openssl
       apt:
         name: openssl

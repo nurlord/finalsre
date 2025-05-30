@@ -16,10 +16,6 @@ jobs:
           ssh-private-key: ${{ secrets.MY_SSH_KEY }}
       - name: Checkout repo (optional, if needed for ansible playbook or files)
         uses: actions/checkout@v4
-      - name: Install Ansible
-        run: |
-          sudo apt update
-          sudo apt install -y ansible sshpass
       - name: Run ansible playbook on remote server
         run: |
           ansible-playbook -i "$SERVER_IP," -u root --ssh-extra-args="-o StrictHostKeyChecking=no" ansible/deploy-nest.yaml
