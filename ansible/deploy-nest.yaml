@@ -42,6 +42,11 @@
         dest: /usr/local/bin/docker-compose
         mode: "0755"
 
+    - name: Clone project from GitHub
+      ansible.builtin.git:
+        repo: "https://github.com/nurlord/finalsre.git"
+        dest: "{{ root_dir }}"
+
     - name: Ensure app directory exists
       file:
         path: "{{ root_dir }}"
@@ -49,13 +54,6 @@
         owner: root
         group: root
         mode: "0755"
-
-    - name: Clone project from GitHub
-      git:
-        repo: git@github.com:nurlord/finalsre.git
-        dest: "{{ root_dir }}"
-        version: main
-        accept_hostkey: yes
 
     - name: Install pip3 and Docker Python SDK
       apt:
