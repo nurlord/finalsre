@@ -1,0 +1,95 @@
+---
+- hosts: webserver
+  become: yes
+  vars:
+    app_dir: /root/nestjs-app
+  tasks:
+    - name: Install required apt packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
+        update_cache: yes
+
+    - name: Install Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+        update_cache: yes
+
+    - name: Install Openssl
+      apt:
+        name: openssl
+        state: present
+        update_cache: yes
+    - name: Install docker-compose plugin
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: "0755"
+
+    - name: Ensure app directory exists
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Clone project from GitHub
+      git:
+        repo: git@github.com:nurlord/finalsre.git
+        dest: "{{ app_dir }}"
+        version: main
+        accept_hostkey: yes
+
+    - name: Install pip3 and Docker Python SDK
+      apt:
+        name:
+          - python3-pip
+        state: present
+        update_cache: yes
+
+    - name: Install docker Python module via apt
+      apt:
+        name: python3-docker
+        state: present
+
+    - name: Add NodeSource Node.js 22 repo
+      ansible.builtin.shell: |
+        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+      args:
+        executable: /bin/bash
+
+    - name: Install Node.js
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+        update_cache: yes
+
+    - name: Ensure npm is installed
+      ansible.builtin.command: npm --version
+      register: npm_check
+      changed_when: false
+
+    - name: Install build-essential (optional for native modules)
+      ansible.builtin.apt:
+        name: build-essential
+        state: present
+
+    - name: Run Docker Compose up using Compose V2
+      community.docker.docker_compose_v2:
+        project_src: "{{ app_dir }}"
